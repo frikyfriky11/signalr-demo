@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+import { HubConnectionState } from "@microsoft/signalr";
 import { Component, Vue } from "vue-property-decorator";
 
 @Component
@@ -23,6 +24,14 @@ export default class HomeView extends Vue {
     this.$customersHub.on("CustomerCreated", (id: number, name: string) => {
       this.customers.push({ id, name });
     });
+  }
+
+  async destroyed() {
+    this.$customersHub.off("CustomerCreated");
+
+    if (this.$customersHub.state === HubConnectionState.Connected) {
+      this.$customersHub.stop();
+    }
   }
 }
 </script>
