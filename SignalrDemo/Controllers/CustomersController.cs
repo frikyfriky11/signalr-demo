@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using SignalrDemo.Hubs;
 using SignalrDemo.Models;
 using SignalrDemo.Services;
 
@@ -22,10 +24,12 @@ public class CustomersController : ControllerBase
 
   [HttpPost]
   [Route("customers")]
-  public ActionResult Create([FromServices] IRepository repository, [FromBody] Customer customer)
+  public ActionResult Create([FromServices] IRepository repository, [FromServices] IHubContext<CustomersHub, ICustomersClientHub> customersHub, [FromBody] Customer customer)
   {
     repository.Add(customer);
 
+    customersHub.Clients.All.CustomerCreated(customer.Id, customer.Name);
+    
     return NoContent();
   }
 
