@@ -1,4 +1,5 @@
-﻿using SignalrDemo.Services;
+﻿using SignalrDemo.Hubs;
+using SignalrDemo.Services;
 
 namespace SignalrDemo;
 
@@ -9,12 +10,18 @@ public class Startup
     services.AddControllers();
 
     services.AddSingleton<IRepository, InMemoryRepository>();
+
+    services.AddSignalR();
   }
 
   public void Configure(IApplicationBuilder app)
   {
     app.UseRouting();
 
-    app.UseEndpoints(endpoints => endpoints.MapControllers());
+    app.UseEndpoints(endpoints =>
+    {
+      endpoints.MapControllers();
+      endpoints.MapHub<CustomersHub>("/signalr/customers-hub");
+    });
   }
 }
