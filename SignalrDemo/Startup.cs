@@ -12,10 +12,24 @@ public class Startup
     services.AddSingleton<IRepository, InMemoryRepository>();
 
     services.AddSignalR();
+
+    services.AddCors(options =>
+    {
+      options.AddDefaultPolicy(policy =>
+      {
+        policy
+          .SetIsOriginAllowed(_ => true)
+          .AllowCredentials()
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+      });
+    });
   }
 
   public void Configure(IApplicationBuilder app)
   {
+    app.UseCors();
+    
     app.UseRouting();
 
     app.UseEndpoints(endpoints =>
