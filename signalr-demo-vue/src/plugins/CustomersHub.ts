@@ -3,7 +3,7 @@ import Vue, { PluginFunction } from "vue";
 
 const plugin: PluginFunction<unknown> = () => {
   const connection = new HubConnectionBuilder()
-    .withUrl("https://localhost:7100/signalr/customers-hub")
+    .withUrl(process.env.VUE_APP_CUSTOMERS_HUB_URL)
     .withAutomaticReconnect()
     .build();
 
